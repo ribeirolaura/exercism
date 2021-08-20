@@ -4,5 +4,5 @@
 //
 
 export const hello = () => {
-  return "Hello, World! :)";
+  return "Hello, World!";
 }
