@@ -40,5 +40,9 @@ export class Triangle {
   get isScalene() {
     return this.validacaoExistenciaTriangulo && (this.sideA !== this.sideB && this.sideB !== this.sideC && this.sideC !== this.sideA);
   };
+  
+  get isDegenerate() {
+    return this.validacaoExistenciaTriangulo && (this.sideA + this.sideB === this.sideC || this.sideB + this.sideC === this.sideA || this.sideA + this.sideC === this.sideB);
+  }
 }
 
