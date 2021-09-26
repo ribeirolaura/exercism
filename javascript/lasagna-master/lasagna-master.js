@@ -27,6 +27,13 @@ export function preparationTime (layers, timePerLayer = 2) {
     let numLayer = layers.length; 
     return timePerLayer*numLayer; 
 }
+// function filterNoodles (noodle) {
+//     return noodle === 'noodles'
+// } se for feita declaração de função externa, chama-se filter(filterNoodles)
+
+// filterNoodles (noodle) {
+//     return noodle === 'noodles'
+// } esse bloco pode ir dentro do local onde se encontra a =>
 
 export function quantities (layers) {
     let noodles = layers.filter(noodle => noodle === 'noodles');
@@ -42,8 +49,15 @@ export function quantities (layers) {
 }
 
 export function addSecretIngredient (friendsList, myList) {
-let lastFriendList = friendsList[friendsList.length - 1]; //nao altera a array original
-let newList = myList.push(lastFriendList);
+    //  myList = [...myList, friendsList[friendsList.length -1 ]]
+    let ultimoFriend = [...friendsList]; //spread operator 
+    // let ultimoFriend = Array.from(friendsList); // copia a array completa
+    console.log(ultimoFriend); 
+    let newFriend = ultimoFriend.pop(); 
+    console.log(newFriend); 
+
+    // let lastFriendList = friendsList[friendsList.length - 1]; //nao altera a array original
+    let newList = myList.push(newFriend);
 }
 
 export function scaleRecipe (recipe, portions) {
