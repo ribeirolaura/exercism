@@ -77,33 +77,39 @@ export class TranslationService {
    * @returns {Promise<void>}
    */
   request(text) {
-    return new Promise ((resolve, reject) => {
-      // let ultimoErro; 
-      this.api.request(text, error => {
-        if (error == null){
-        resolve(undefined);
-        } 
-        else {
-          // ultimoErro = error;
-          this.api.request(text, error2 => {
-            if (error2 == null){
-              resolve(undefined); 
-            } else {
-              this.api.request(text, error3 => {
-                if (error3 == null){
-                  resolve(undefined);
-                } else {
-                  reject (error3); 
-                }
-              })
-            }
-          } )
-        }
-      })
-  }); 
-
-
+      return new Promise ((resolve, reject) => {
+        this.api.request(text, error => {
+          if (error == null){
+            resolve(undefined);
+          } 
+          else {
+            this.api.request(text, error2 => {
+              if (error2 == null){
+                resolve(undefined); 
+              } else {
+                this.requestPromise(text)
+                .then(resultado => resolve(undefined))
+                .catch (error => reject(error));
+              }
+            })
+          }
+        })
+      }); 
+    }
+    
+  requestPromise (text) {
+      return new Promise ((resolve, reject) => {
+        this.api.request(text, error => {
+          if (error == null){
+            resolve(undefined);
+          } else reject (error); 
+        });
+      });
   }
+
+
+
+
 
   /**
    * Retrieves the translation for the given text
