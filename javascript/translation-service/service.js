@@ -83,15 +83,13 @@ export class TranslationService {
             resolve(undefined);
           } 
           else {
-            this.api.request(text, error2 => {
-              if (error2 == null){
-                resolve(undefined); 
-              } else {
-                this.requestPromise(text)
+            this.requestPromise(text)
                 .then(resultado => resolve(undefined))
-                .catch (error => reject(error));
-              }
-            })
+                .catch (error => {
+                  this.requestPromise(text)
+                    .then(resultado => resolve(undefined))
+                    .catch (error => reject(error));
+                });
           }
         })
       }); 
