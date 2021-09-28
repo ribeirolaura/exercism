@@ -78,20 +78,17 @@ export class TranslationService {
    */
   request(text) {
       return new Promise ((resolve, reject) => {
-        this.api.request(text, error => {
-          if (error == null){
-            resolve(undefined);
-          } 
-          else {
-            this.requestPromise(text)
+        this.requestPromise(text)
+            .then(resultado => resolve(undefined))
+            .catch(error => {
+              this.requestPromise(text)
                 .then(resultado => resolve(undefined))
                 .catch (error => {
                   this.requestPromise(text)
                     .then(resultado => resolve(undefined))
                     .catch (error => reject(error));
                 });
-          }
-        })
+            });
       }); 
     }
     
