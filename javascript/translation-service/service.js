@@ -1,4 +1,8 @@
 /// <reference path="./global.d.ts" />
+
+import { NotAvailable } from "./errors";
+
+
 // @ts-check
 //
 // The lines above enable type checking for this file. Various IDEs interpret
@@ -76,22 +80,36 @@ export class TranslationService {
    * @param {string} text
    * @returns {Promise<void>}
    */
-  request(text) {
-      return new Promise ((resolve, reject) => {
-        this.requestPromise(text)
-            .then(resultado => resolve(undefined))
-            .catch(error => {
-              this.requestPromise(text)
-                .then(resultado => resolve(undefined))
-                .catch (error => {
-                  this.requestPromise(text)
-                    .then(resultado => resolve(undefined))
-                    .catch (error => reject(error));
-                });
-            });
-      }); 
+  // request(text) {
+  //     return new Promise ((resolve, reject) => {
+  //       this.requestPromise(text)
+  //           .then(resultado => resolve(undefined))
+  //           .catch(error => {
+  //             this.requestPromise(text)
+  //               .then(resultado => resolve(undefined))
+  //               .catch (error => {
+  //                 this.requestPromise(text)
+  //                   .then(resultado => resolve(undefined))
+  //                   .catch (error => reject(error));
+  //               });
+  //           });
+  //     }); 
+  //   }
+
+  async request(text) {
+      for (let index = 1; index <= 3; index++) {
+        try {
+          await this.requestPromise(text);
+          return undefined; 
+        } catch (error) {
+          if (index === 3) {
+            throw error; 
+          }
+        }
+        
+      }
     }
-    
+  
   requestPromise (text) {
       return new Promise ((resolve, reject) => {
         this.api.request(text, error => {
@@ -102,9 +120,15 @@ export class TranslationService {
       });
   }
 
-
-
-
+  // jeito da giu de resolver 
+  // const novaPromise = (busca) => {
+  //   return new Promise((resolve, reject) => {
+  //     this.api.request(busca, (erro) => erro ? reject(erro) : resolve(undefined));
+  //   })
+  // }
+  // return novaPromise(busca)
+  //   .catch(() => novaPromise(busca))
+  //   .catch(() => novaPromise(busca))
 
   /**
    * Retrieves the translation for the given text
@@ -116,11 +140,20 @@ export class TranslationService {
    * @param {number} minimumQuality
    * @returns {Promise<string>}
    */
-  premium(text, minimumQuality) {
-    throw new Error('Implement the premium function');
+  async premium(text, minimumQuality) {
+    try{
+      let resultado = await this.api.fetch(text);
+      if (resultado.quality >= minimumQuality) {
+       return resultado.translation; 
+      } else throw new QualityThresholdNotMet (text);   
+    } catch (error) {
+      if (error instanceof NotAvailable){
+        await this.request(text); 
+        return (await this.api.fetch(text)).translation;
+      } else throw error;
   }
 }
-
+}
 /**
  * This error is used to indicate a translation was found, but its quality does
  * not meet a certain threshold. Do not change the name of this error.

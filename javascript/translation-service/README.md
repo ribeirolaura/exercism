@@ -155,7 +155,7 @@ service.premium("jIyajbe'", 100);
 // => Promise<...> resolves "I don't understand."
 
 service.premium("'arlogh Qoylu'pu'?", 100);
-// => Promise<...> rejects QualityThresholdNotMet()
+// => Promise<...> rejects QualityTh    resholdNotMet()
 
 service.premium("'arlogh Qoylu'pu'?", 40);
 // => Promise<...> resolves "What time is it?"
