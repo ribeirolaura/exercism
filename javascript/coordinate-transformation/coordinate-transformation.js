@@ -72,9 +72,8 @@ export function scale2d(sx, sy) {
 export function composeTransform(f, g) {
   return function (x, y) {
     let [x1, y1] = f(x, y); 
-    return g(x1, y1); 
+    return g(...f(x,y)); //g(x1, y1) 
   }
-
 }
 
 /**
